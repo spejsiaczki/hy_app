@@ -1,21 +1,32 @@
 import os
+import psutil
 from flasgger import Swagger
 from flask import Flask, jsonify, request, send_from_directory, flash
 from werkzeug.utils import secure_filename
-import psutil
+from flask_socketio import SocketIO, emit, disconnect
+import time
+
 
 app = Flask(__name__, static_folder='../web/build')
 swagger = Swagger(app)
 
-app.secret_key = os.getenv('SECRET_KEY', 'secret string')
+# Secret key for JWT and app
+app.secret_key = os.getenv('SECRET_KEY', 'super_secret_key')
+
+# Configure JWT
+app.config['JWT_SECRET_KEY'] = app.secret_key  # Change this to a secure value
 
 # Custom config
 app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'uploads')
 app.config['ALLOWED_EXTENSIONS'] = ['mp4', 'avi', 'mov', 'mkv']
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 100MB file size limit
 
 # Ensure the upload directory exists
 if not os.path.exists(app.config['UPLOAD_PATH']):
     os.makedirs(app.config['UPLOAD_PATH'])
+
+# Initialize SocketIO
+socketio = SocketIO(app)
 
 
 def allowed_file(filename):
@@ -152,5 +163,22 @@ def telemetry():
     return jsonify(telemetry_data)
 
 
+@socketio.on('start_updates')
+def handle_updates():
+    """
+    After file upload, this WebSocket connection is established.
+    Sends 3 update messages, one every second, and then disconnects.
+    """
+    # Send 3 updates, 1 per second
+    for i in range(1, 4):
+        update_message = f"Processing update {i}/3"
+        emit('update', {'message': update_message})
+        time.sleep(1)  # Simulate delay in sending updates
+
+    # Disconnect the WebSocket after sending the updates
+    emit('complete', {'message': 'All updates sent, closing connection.'})
+    disconnect()
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
