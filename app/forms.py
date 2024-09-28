@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
