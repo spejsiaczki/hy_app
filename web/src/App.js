@@ -1,5 +1,6 @@
-import logo from "./logo.svg";
-import "./App.css";
+import Navbar from "./components/Navbar";
+import UploadBox from "./components/UploadBox";
+import { ContentWrapper, Header, Description } from "./styles";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -13,11 +14,14 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>spejsiaczki :3</p>
-        <h1>{message}</h1>
-      </header>
+      <Navbar />
+      <ContentWrapper>
+        <Header>Welcome to Our High-Tech Startup</Header>
+        <Description>
+          Upload your files easily and securely with our cutting-edge service.
+        </Description>
+        <UploadBox />
+      </ContentWrapper>
     </div>
   );
 }
