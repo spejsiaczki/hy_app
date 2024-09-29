@@ -22,8 +22,8 @@ class ProgressBar extends React.Component {
   render() {
     return (
       <div className={styles["progress-bar"]}>
-        <div className={styles["progress-backdrop"]}/>
-        <div id="progress-mask" className={styles["progress"]} style={{ width: this.state.progress + "%" }}/>
+        <div className={styles["progress-backdrop"]} />
+        <div id="progress-mask" className={styles["progress"]} style={{ width: this.state.progress + "%" }} />
         <div className={styles["status"]}>{this.state.status}</div>
       </div>
     );
