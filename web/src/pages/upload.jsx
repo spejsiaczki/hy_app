@@ -37,7 +37,8 @@ export default function Upload() {
   const dropzoneRef = useRef(null);
   const [buttonActive, setButtonActive] = useState(true);
   const [isUploading, setIsUploading] = useState(false); // Track if upload is in progress
-  const progressBarRef = useRef(null);
+    const progressBarRef = useRef(null);
+    const [loading, setLoading] = useState(false);
 
   const handleData = (data) => {
     console.log("Data received: ", data);
@@ -46,7 +47,8 @@ export default function Upload() {
       nav("/report", { replace: true });
   };
 
-  const jobStatusRequest = (job_id) => {
+    const jobStatusRequest = (job_id) => {
+      setLoading(true);
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/get_job/" + job_id, true);
     xhr.onload = () => {
@@ -168,48 +170,49 @@ export default function Upload() {
     <div className={styles["upload"]}>
       <div className={styles["slogan"]}>
         Dokonaj analizy przemówienia w parę sekund!
-      </div>
-      <div
-        className={styles["dropzone"]}
-        ref={dropzoneRef}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onDragEnter={() => {
-          dropzoneRef.current.classList.add(styles["drag-over"]);
-          setButtonActive(false);
-        }}
-        onDragLeave={() => {
-          dropzoneRef.current.classList.remove(styles["drag-over"]);
-          setButtonActive(true);
-        }}
-        onMouseUp={() => {
-          dropzoneRef.current.classList.remove(styles["drag-over"]);
-          setButtonActive(true);
-        }}
-        onMouseLeave={() => {
-          dropzoneRef.current.classList.remove(styles["drag-over"]);
-          setButtonActive(true);
-        }}
-      >
-        <div className={styles["drop-tip"]}>Upuść tutaj materiały wideo...</div>
-        <FontAwesomeIcon className={styles["upload-icon"]} icon={faUpload} />
-        <Button
-          className={
-            styles["upload-button"] +
-            (!buttonActive ? ` ${styles["upload-button-disabled"]}` : "")
+          </div>
+          {loading ? <><ProgressBar ref={progressBarRef} /> <br/><br/><div className={styles["loading"]}>Może to potrwać do 5 minut...</div></>:
+              <div
+                  className={styles["dropzone"]}
+                  ref={dropzoneRef}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragEnter={() => {
+                      dropzoneRef.current.classList.add(styles["drag-over"]);
+                      setButtonActive(false);
+                  }}
+                  onDragLeave={() => {
+                      dropzoneRef.current.classList.remove(styles["drag-over"]);
+                      setButtonActive(true);
+                  }}
+                  onMouseUp={() => {
+                      dropzoneRef.current.classList.remove(styles["drag-over"]);
+                      setButtonActive(true);
+                  }}
+                  onMouseLeave={() => {
+                      dropzoneRef.current.classList.remove(styles["drag-over"]);
+                      setButtonActive(true);
+                  }}
+              >
+                  <div className={styles["drop-tip"]}>Upuść tutaj materiały wideo...</div>
+                  <FontAwesomeIcon className={styles["upload-icon"]} icon={faUpload} />
+                  <Button
+                      className={
+                          styles["upload-button"] +
+                          (!buttonActive ? ` ${styles["upload-button-disabled"]}` : "")
+                      }
+                      onClick={handleClick}
+                  >
+                      Wybierz z Dysku
+                  </Button>
+                  <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      onChange={handleFileSelect}
+                  />
+              </div>
           }
-          onClick={handleClick}
-        >
-          Wybierz z Dysku
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileSelect}
-        />
-      </div>
-
       {isUploading && <ProgressBar ref={progressBarRef} />}
     </div>
   );
