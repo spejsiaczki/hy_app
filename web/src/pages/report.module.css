@@ -1,0 +1,43 @@
+.report {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-self: center;
+    height: calc(100vh - 80px);
+    width: 100vw;
+    gap: 40px;
+}
+
+.video-pane {
+    width: calc(50% - 40px);
+    margin-left: 40px;
+    margin-top: 40px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.video-pane video {
+    width: 100%;
+}
+
+.results-pane {
+    width: calc(50% - 40px);
+    margin-right: 40px;
+    margin-top: 40px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.slogan {
+    font-size: 3em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1.3em;
+    text-align: center;
+    margin-left: 20px;
+    margin-right: 20px;
+    max-width: 1000px;
+}

@@ -4,6 +4,7 @@ import styles from './app.module.css';
 import Navbar from "./components/navbar";
 import NotFound from './pages/not-found';
 import Upload from './pages/upload';
+import Report from './pages/report';
 // import FileUploadComponent from "./components/FileUploadComponent";
 import {
   createBrowserRouter,
@@ -24,17 +25,10 @@ export default function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route exact path="/" element={<Upload/>}/>
-          <Route path="*" element={<NotFound/>}/>
+          <Route exact path="/" element={<Upload />} />
+          <Route exact path="/report" element={<Report />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* <div>
-          <div>Welcome to Our High-Tech Startup</div>
-          <div>
-            Upload your files easily and securely with our cutting-edge service.
-          </div>
-          <FileUploadComponent />
-          <UploadBox />
-        </div> */}
       </BrowserRouter>
     </div>
   );

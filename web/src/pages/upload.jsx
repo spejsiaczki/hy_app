@@ -4,8 +4,11 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../components/button';
 import ProgressBar from '../components/progress-bar';
+import { setReportVideo } from './report';
+import { useNavigate } from 'react-router-dom';
 
 export default function Upload() {
+  const nav = useNavigate();
   const fileInputRef = useRef(null);
   const dropzoneRef = useRef(null);
   const [buttonActive, setButtonActive] = useState(true);
@@ -33,6 +36,7 @@ export default function Upload() {
 
   const handleFileUpload = (file) => {
     if (!file) return;
+    setReportVideo(file);
 
     const formData = new FormData();
     formData.append('file', file); // Append the file to FormData
@@ -58,6 +62,7 @@ export default function Upload() {
       setIsUploading(false); // Mark the upload as finished
       if (xhr.status === 200) {
         console.log('File uploaded successfully');
+        nav('/report', { replace: true });
       } else {
         let err = xhr.statusText;
         if (xhr.status == 400) {
