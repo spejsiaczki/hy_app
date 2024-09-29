@@ -117,6 +117,18 @@ steps:
             param_name: output
             type: text
             public: true
+  - name: audio_analysis
+    entries:
+      - module: audio_analysis
+        inputs:
+          - name: audio_trim.wav
+            param_name: input
+            type: audio
+        outputs:
+          - name: output_audio_analysis.txt
+            param_name: output
+            type: text
+            public: true
   - name: merger
     entries:
       - module: merger
@@ -157,20 +169,12 @@ steps:
             name: output_language.txt
             type: text
             public: true
+          - param_name: input_audio_analysis
+            name: output_audio_analysis.txt
+            type: text
+            public: true
         outputs:
           - name: output_merged.txt
             param_name: output_merged
-            type: text
-            public: true
-  - name: text_summary
-    entries:
-      - module: text_summary
-        inputs:
-          - name: output_text.txt
-            param_name: original_text
-            type: text
-        outputs:
-          - name: output_summary_text.txt
-            param_name: summary_text
             type: text
             public: true
