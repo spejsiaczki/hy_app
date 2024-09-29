@@ -23,6 +23,8 @@ export default function Report() {
     let transcript =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
+    let audio_errors = 0;
+
     return (
         <div className={styles["report"]}>
             <div className={styles["video-pane"]}>
@@ -49,10 +51,47 @@ export default function Report() {
                 <div className={styles["result-title"]}>Podsumowanie</div>
                 <div className={styles["result-cards"]}>
                     <div className={styles["result"]}>
-                        <div className={styles["result-label"]}>
+                        <div className={styles["result-label"]}>100</div>
+                        <div className={styles["result-value"]}>
                             Liczba słów
                         </div>
-                        <div className={styles["result-value"]}>100</div>
+                    </div>
+                    <div className={styles["result"]}>
+                        <div className={styles["result-label"]}>100</div>
+                        <div className={styles["result-value"]}>
+                            Liczba słów
+                        </div>
+                    </div>
+                </div>
+                <div className={styles["result-title"]}>Wykryte błędy</div>
+                <div className={styles["result-cards"]}>
+                    <div className={styles["result"]}>
+                        <div className={styles["result-label"]}>Dźwiękowe</div>
+                        <div
+                            className={
+                                styles["result-value"] +
+                                " " +
+                                (audio_errors == 0)
+                                    ? styles["great"]
+                                    : audio_errors < 3
+                                      ? styles["ok"]
+                                      : styles["bad"]
+                            }
+                        >
+                            Przerywniki: {audio_errors}
+                        </div>
+                    </div>
+                    <div className={styles["result"]}>
+                        <div className={styles["result-label"]}>Treść</div>
+                        <div className={styles["result-value"]}>
+                            Liczba słów
+                        </div>
+                    </div>
+                    <div className={styles["result"]}>
+                        <div className={styles["result-label"]}>Wizualne</div>
+                        <div className={styles["result-value"]}>
+                            Liczba słów
+                        </div>
                     </div>
                 </div>
             </div>

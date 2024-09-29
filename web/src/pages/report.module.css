@@ -79,13 +79,14 @@
 
 .result {
     display: flex;
+    flex-basis: 25%;
     flex-direction: column;
     justify-content: left;
     align-items: left;
     padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-    background-color: #555;
+    background-color: #222;
     transition: background-color 0.3s;
 }
 
@@ -108,4 +109,16 @@
     font-size: 1.2em;
     font-family: "Montserrat", sans-serif;
     text-align: left;
+}
+
+.great {
+    color: rgb(10, 110, 10);
+}
+
+.ok {
+    color: rgb(200, 187, 10);
+}
+
+.bad {
+    color: rgb(185, 12, 12);
 }
