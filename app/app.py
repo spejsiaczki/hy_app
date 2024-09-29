@@ -52,8 +52,10 @@ def serve_react(path):
 
 @app.route("/get_job/<job_id>", methods=["GET"])
 def get_job(job_id):
-    path_to_result = os.path.join(app.root_path, "temp", "temp", job_id, "public", "output_merged.txt")
-    
+    path_to_result = os.path.join(
+        app.root_path, "temp", "temp", job_id, "public", "output_merged.txt"
+    )
+
     if os.path.exists(path_to_result):
         with open(path_to_result, "r") as file:
             return jsonify(file.read())
@@ -112,12 +114,13 @@ def upload_file():
     else:
         return jsonify({"error": "Invalid file format"}), 400
 
+
 @app.route("/run_job/<job_id>", methods=["POST"])
 async def run_job(job_id):
     print(f"Job ID: {job_id}")
     if not str.isalnum(job_id):
         return jsonify("error", {"message": "Invalid job ID"})
-    
+
     # if not artifacts.does_job_exist(job_id):
     #     return jsonify("error", {"message": "Job not found"})
 
@@ -126,8 +129,9 @@ async def run_job(job_id):
         # emit("update", {"message": "dupa23"})
 
     await manager.run_job(job, job_id, update_callback)
-    
+
     return jsonify({"message": "Job completed"})
+
 
 @app.route("/telemetry", methods=["GET"])
 def telemetry():
@@ -209,7 +213,7 @@ def telemetry():
 #     print(f"Job ID: {job_id}")
 #     if not str.isalnum(job_id):
 #         return emit("error", {"message": "Invalid job ID"})
-    
+
 #     if not artifacts.does_job_exist(job_id):
 #         return emit("error", {"message": "Job not found"})
 
@@ -221,4 +225,4 @@ def telemetry():
 
 
 if __name__ == "__main__":
-    flask.run(app, debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
