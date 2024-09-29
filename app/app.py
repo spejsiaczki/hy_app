@@ -121,8 +121,8 @@ async def run_job(job_id):
     if not str.isalnum(job_id):
         return jsonify("error", {"message": "Invalid job ID"})
     
-    if not artifacts.does_job_exist(job_id):
-        return jsonify("error", {"message": "Job not found"})
+    # if not artifacts.does_job_exist(job_id):
+    #     return jsonify("error", {"message": "Job not found"})
 
     def update_callback(message):
         print(f"Job update: {message}")

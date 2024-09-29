@@ -25,6 +25,7 @@ export default function Upload() {
         xhr.onload = () => {
             if (xhr.status === 200) {
                 console.log("Job request sent successfully");
+                console.log(xhr.responseText);
                 // window.location.href = "/results/" + job_id;
             } else {
                 let err = xhr.statusText;
