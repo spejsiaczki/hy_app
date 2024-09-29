@@ -1,119 +1,164 @@
 name: BreakWordTraps
 version: 1
 input_artifact:
-    name: video_original.mp4
-    type: video
+  name: video_original.mp4
+  type: video
 steps:
-    - name: trim_splash_screen
-      entries:
-          - module: video_trim
-            inputs:
-                - name: video_original.mp4
-                  param_name: input
-                  type: video
-            outputs:
-                - name: video_trim.mp4
-                  param_name: output_mp4
-                  type: video
-                - name: audio_trim.wav
-                  param_name: output_wav
-                  type: audio
-    - name: ocr
-      entries:
-          - module: ocr
-            inputs:
-                - name: video_trim.mp4
-                  param_name: input
-                  type: video
-            outputs:
-                - name: output_ocr.txt
-                  param_name: output_ocr
-                  type: text
-                  public: true
-    - name: speech_processing
-      entries:
-          - module: speech_processing
-            inputs:
-                - name: audio_trim.wav
-                  param_name: input_audio
-                  type: audio
-            outputs:
-                - name: output_text.txt
-                  param_name: output_text
-                  type: text
-                  public: true
-                - name: output_word_timestamps.txt
-                  param_name: output_word_timestamps
-                  type: text
-                  public: true
-                - name: output_pause_timestamps.txt
-                  param_name: output_pause_timestamps
-                  type: text
-                  public: true
-    - name: language_detection
-      entries:
-          - module: language_detection
-            inputs:
-                - name: output_text.txt
-                  param_name: input_text
-                  type: text
-                  public: true
-            outputs:
-                - name: output_language.txt
-                  param_name: output_language
-                  type: text
-                  public: true
-    - name: gunning_fog
-      entries:
-          - module: gunning_fog
-            inputs:
-                - name: output_text.txt
-                  param_name: input_text
-                  type: text
-                  public: true
-            outputs:
-                - name: output_gunning_fog.txt
-                  param_name: output
-                  type: text
-                  public: true
-    - name: text_comparison
-      entries:
-          - module: text_comparison
-            inputs:
-                - name: output_ocr.txt
-                  param_name: input_ocr
-                  type: text
-                  public: true
-                - name: output_text.txt
-                  param_name: input_sr
-                  type: text
-                  public: true
-            outputs:
-                - name: output_test_comparison.txt
-                  param_name: output
-                  type: text
-                  public: true
-    - name: background_person_detection
-      entries:
-          - module: background_person_detection
-            inputs:
-                - name: video_trim.mp4
-                  param_name: input
-                  type: video
-            outputs:
-                - name: output_background_person_detection.txt
-                  param_name: output
-                  type: text
-                  public: true
-    - name: emotions_detection
-      entries:
-          - module: emotions_detection
-            inputs:
-                - name: video_trim.mp4
-                  param_name: input
-                  type: video
-            outputs:
-                - name: output_emotions_detection.txt
-                  param_name: output
-                  type: text
-                  public: true
+  - name: trim_splash_screen
+    entries:
+      - module: video_trim
+        inputs:
+          - name: video_original.mp4
+            param_name: input
+            type: video
+        outputs:
+          - name: video_trim.mp4
+            param_name: output_mp4
+            type: video
+          - name: audio_trim.wav
+            param_name: output_wav
+            type: audio
+  - name: ocr
+    entries:
+      - module: ocr
+        inputs:
+          - name: video_trim.mp4
+            param_name: input
+            type: video
+        outputs:
+          - name: output_ocr.txt
+            param_name: output_ocr
+            type: text
+            public: true
+  - name: speech_processing
+    entries:
+      - module: speech_processing
+        inputs:
+          - name: audio_trim.wav
+            param_name: input_audio
+            type: audio
+        outputs:
+          - name: output_text.txt
+            param_name: output_text
+            type: text
+            public: true
+          - name: output_word_timestamps.txt
+            param_name: output_word_timestamps
+            type: text
+            public: true
+          - name: output_pause_timestamps.txt
+            param_name: output_pause_timestamps
+            type: text
+            public: true
+  - name: language_detection
+    entries:
+      - module: language_detection
+        inputs:
+          - name: output_text.txt
+            param_name: input_text
+            type: text
+            public: true
+        outputs:
+          - name: output_language.txt
+            param_name: output_language
+            type: text
+            public: true
+  - name: gunning_fog
+    entries:
+      - module: gunning_fog
+        inputs:
+          - name: output_text.txt
+            param_name: input_text
+            type: text
+            public: true
+        outputs:
+          - name: output_gunning_fog.txt
+            param_name: output
+            type: text
+            public: true
+  - name: text_comparison
+    entries:
+      - module: text_comparison
+        inputs:
+          - name: output_ocr.txt
+            param_name: input_ocr
+            type: text
+            public: true
+          - name: output_text.txt
+            param_name: input_sr
+            type: text
+            public: true
+        outputs:
+          - name: output_test_comparison.txt
+            param_name: output
+            type: text
+            public: true
+  - name: background_person_detection
+    entries:
+      - module: background_person_detection
+        inputs:
+          - name: video_trim.mp4
+            param_name: input
+            type: video
+        outputs:
+          - name: output_background_person_detection.txt
+            param_name: output
+            type: text
+            public: true
+  - name: emotions_detection
+    entries:
+      - module: emotions_detection
+        inputs:
+          - name: video_trim.mp4
+            param_name: input
+            type: video
+        outputs:
+          - name: output_emotions_detection.txt
+            param_name: output
+            type: text
+            public: true
+  - name: merger
+    entries:
+      - module: merger
+        inputs:
+          - param_name: input_comparison
+            name: output_test_comparison.txt
+            type: text
+            public: true
+          - param_name: input_sp
+            name: output_text.txt
+            type: text
+            public: true
+          - param_name: input_ocr
+            name: output_ocr.txt
+            type: text
+            public: true
+          - param_name: input_word_timestamps
+            name: output_word_timestamps.txt
+            type: text
+            public: true
+          - param_name: input_pause_timestamps
+            name: output_pause_timestamps.txt
+            type: text
+            public: true
+          - param_name: input_background_person_detection
+            name: output_background_person_detection.txt
+            type: text
+            public: true
+          - param_name: input_emotions_detection
+            name: output_emotions_detection.txt
+            type: text
+            public: true
+          - param_name: input_gunning_fog
+            name: output_gunning_fog.txt
+            type: text
+            public: true
+          - param_name: input_language_detection
+            name: output_language.txt
+            type: text
+            public: true
+        outputs:
+          - name: output_merged.txt
+            param_name: output_merged
+            type: text
+            public: true
