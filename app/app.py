@@ -6,7 +6,6 @@ import logging
 from flasgger import Swagger
 from flask import Flask, jsonify, request, send_from_directory, flash
 from werkzeug.utils import secure_filename
-from flask_socketio import SocketIO, emit, disconnect
 
 from job_manager.artifact_manager import ArtifactManager
 from job_manager.manager import JobManager
@@ -33,9 +32,6 @@ app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024  # 100MB file size limit
 # Ensure the upload directory exists
 if not os.path.exists(app.config["UPLOAD_PATH"]):
     os.makedirs(app.config["UPLOAD_PATH"])
-
-# Initialize SocketIO
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 def allowed_file(filename):
@@ -119,6 +115,22 @@ def upload_file():
     else:
         return jsonify({"error": "Invalid file format"}), 400
 
+@app.route("/run_job/<job_id>", methods=["POST"])
+async def run_job(job_id):
+    print(f"Job ID: {job_id}")
+    if not str.isalnum(job_id):
+        return jsonify("error", {"message": "Invalid job ID"})
+    
+    if not artifacts.does_job_exist(job_id):
+        return jsonify("error", {"message": "Job not found"})
+
+    def update_callback(message):
+        print(f"Job update: {message}")
+        # emit("update", {"message": "dupa23"})
+
+    await manager.run_job(job, job_id, update_callback)
+    
+    return jsonify({"message": "Job completed"})
 
 @app.route("/telemetry", methods=["GET"])
 def telemetry():
@@ -195,19 +207,21 @@ def telemetry():
     return jsonify(telemetry_data)
 
 
-@socketio.on("start_job")
-async def handle_updates(job_id):
-    if not str.isalnum(job_id):
-        return emit("error", {"message": "Invalid job ID"})
+# @socketio.on("start_job")
+# async def handle_updates(job_id):
+#     print(f"Job ID: {job_id}")
+#     if not str.isalnum(job_id):
+#         return emit("error", {"message": "Invalid job ID"})
     
-    if not artifacts.does_job_exist(job_id):
-        return emit("error", {"message": "Job not found"})
+#     if not artifacts.does_job_exist(job_id):
+#         return emit("error", {"message": "Job not found"})
 
-    def update_callback(message):
-        emit("update", {"message": message})
+#     def update_callback(message):
+#         print(f"Job update: {message}")
+#         emit("update", {"message": "dupa23"})
 
-    await manager.run_job(job, job_id, update_callback)
+#     await manager.run_job(job, job_id, update_callback)
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
+    flask.run(app, debug=True, host="0.0.0.0", port=5000)
