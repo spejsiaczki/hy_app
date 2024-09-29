@@ -41,6 +41,7 @@ export default function Upload() {
 
   const handleData = (data) => {
     console.log("Data received: ", data);
+    data = JSON.parse(data);
       clearInterval(intervalId);
       setReportData(data);
       nav("/report", { replace: true });
