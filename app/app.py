@@ -6,44 +6,45 @@ from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, disconnect
 import time
 
-
-app = Flask(__name__, static_folder='../web/build')
+app = Flask(__name__, static_folder="../web/build")
 swagger = Swagger(app)
 
 # Secret key for JWT and app
-app.secret_key = os.getenv('SECRET_KEY', 'super_secret_key')
+app.secret_key = os.getenv("SECRET_KEY", "super_secret_key")
 
 # Configure JWT
-app.config['JWT_SECRET_KEY'] = app.secret_key  # Change this to a secure value
+app.config["JWT_SECRET_KEY"] = app.secret_key  # Change this to a secure value
 
 # Custom config
-app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'uploads')
-app.config['ALLOWED_EXTENSIONS'] = ['mp4', 'avi', 'mov', 'mkv']
-app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 100MB file size limit
+app.config["UPLOAD_PATH"] = os.path.join(app.root_path, "uploads")
+app.config["ALLOWED_EXTENSIONS"] = ["mp4", "avi", "mov", "mkv"]
+app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024  # 100MB file size limit
 
 # Ensure the upload directory exists
-if not os.path.exists(app.config['UPLOAD_PATH']):
-    os.makedirs(app.config['UPLOAD_PATH'])
+if not os.path.exists(app.config["UPLOAD_PATH"]):
+    os.makedirs(app.config["UPLOAD_PATH"])
 
 # Initialize SocketIO
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+    )
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
 def serve_react(path):
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route('/video', methods=['POST'])
+@app.route("/video", methods=["POST"])
 def upload_file():
     """
     Upload a video file to the server.
@@ -72,23 +73,23 @@ def upload_file():
       400:
         description: Invalid file format or no file provided
     """
-    if 'file' not in request.files:
-        flash('No file part')
-        return jsonify({'error': 'No file part'}), 400
+    if "file" not in request.files:
+        flash("No file part")
+        return jsonify({"error": "No file part"}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-        return jsonify({'message': 'File uploaded successfully'}), 200
+        file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
+        return jsonify({"message": "File uploaded successfully"}), 200
     else:
-        return jsonify({'error': 'Invalid file format'}), 400
+        return jsonify({"error": "Invalid file format"}), 400
 
 
-@app.route('/telemetry', methods=['GET'])
+@app.route("/telemetry", methods=["GET"])
 def telemetry():
     """
     Retrieve system telemetry data like CPU, memory, and disk usage.
@@ -140,30 +141,30 @@ def telemetry():
     # Memory usage info
     memory_info = psutil.virtual_memory()
     memory_usage = {
-        'total': memory_info.total,
-        'available': memory_info.available,
-        'percent': memory_info.percent
+        "total": memory_info.total,
+        "available": memory_info.available,
+        "percent": memory_info.percent,
     }
 
     # Disk usage info
-    disk_info = psutil.disk_usage('/')
+    disk_info = psutil.disk_usage("/")
     disk_usage = {
-        'total': disk_info.total,
-        'used': disk_info.used,
-        'free': disk_info.free,
-        'percent': disk_info.percent
+        "total": disk_info.total,
+        "used": disk_info.used,
+        "free": disk_info.free,
+        "percent": disk_info.percent,
     }
 
     telemetry_data = {
-        'cpu_usage': cpu_usage,
-        'memory_usage': memory_usage,
-        'disk_usage': disk_usage
+        "cpu_usage": cpu_usage,
+        "memory_usage": memory_usage,
+        "disk_usage": disk_usage,
     }
 
     return jsonify(telemetry_data)
 
 
-@socketio.on('start_updates')
+@socketio.on("start_updates")
 def handle_updates():
     """
     After file upload, this WebSocket connection is established.
@@ -172,13 +173,13 @@ def handle_updates():
     # Send 3 updates, 1 per second
     for i in range(1, 4):
         update_message = f"Processing update {i}/3"
-        emit('update', {'message': update_message})
+        emit("update", {"message": update_message})
         time.sleep(1)  # Simulate delay in sending updates
 
     # Disconnect the WebSocket after sending the updates
-    emit('complete', {'message': 'All updates sent, closing connection.'})
+    emit("complete", {"message": "All updates sent, closing connection."})
     disconnect()
 
 
-if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
