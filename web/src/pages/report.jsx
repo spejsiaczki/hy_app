@@ -4,10 +4,21 @@ import React from "react";
 import Plot from "react-plotly.js";
 
 let reportVideo = null;
+let job_id = null;
+let intervalId = null;
 
 function setReportVideo(video) {
   reportVideo = video;
   window.dispatchEvent(new Event("setReportVideo"));
+}
+
+function setJobId(id) {
+  job_id = id;
+  window.dispatchEvent(new Event("setJobId"));
+}
+
+function setIntervalId(id) {
+  intervalId = id;
 }
 
 function StyledPlot({ className, title, data }) {
@@ -35,13 +46,51 @@ function StyledPlot({ className, title, data }) {
 }
 
 export default function Report() {
+  // const [intervalId, setIntervalId] = React.useState(null);
+
+  const handleData = (data) => {
+    console.log("Data received: ", data);
+    clearInterval(intervalId);
+  };
+
+  const sendJobRequest = (job_id) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/get_job/" + job_id, true);
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        console.log("Job data received successfully");
+        handleData(response);
+      } else {
+        let err = xhr.statusText;
+        if (xhr.status == 400) {
+          const text = xhr.responseText;
+          err = JSON.parse(text).error;
+          alert("Nie udało się wysłać zapytania: " + err);
+        }
+      }
+    };
+    xhr.onerror = () => {
+      console.error("An error occurred during the job request");
+    };
+    xhr.send(JSON.stringify({ job_id: job_id }));
+  };
+
   useEffect(() => {
     const listener = () => {
       console.log("reportVideo:", reportVideo);
     };
+      
+    const intervalId = setInterval(() => {
+        sendJobRequest(job_id);
+    }, 1000);
+    setIntervalId(intervalId);
+    
     window.addEventListener("setReportVideo", listener);
+    window.addEventListener("setJobId", listener);
     return () => {
       window.removeEventListener("setReportVideo", listener);
+      window.removeEventListener("setJobId", listener);
     };
   }, []);
 
@@ -55,14 +104,14 @@ export default function Report() {
       <div className={styles["video-pane"]}>
         <div className={styles["slogan"]}>Wyniki analizy</div>
         <video controls className={styles["video"]}>
-          {/* <source
+          <source
                         src={URL.createObjectURL(reportVideo)}
                         type="video/mp4"
-                    /> */}
-          <source
+                    />
+          {/* <source
             src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             type="video/mp4"
-          />
+          /> */}
           Your browser does not support the video tag.
         </video>
         <div className={styles["transcript"]}> Transkrypcja </div>
@@ -155,4 +204,4 @@ export default function Report() {
   );
 }
 
-export { setReportVideo };
+export { setReportVideo, setJobId };

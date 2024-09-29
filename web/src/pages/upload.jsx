@@ -4,7 +4,7 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../components/button";
 import ProgressBar from "../components/progress-bar";
-import { setReportVideo } from "./report";
+import { setReportVideo, setJobId } from "./report";
 import { useNavigate } from "react-router-dom";
 
 export default function Upload() {
@@ -86,6 +86,7 @@ export default function Upload() {
         console.log("File uploaded successfully");
         const response = JSON.parse(xhr.responseText);
         sentJobRequest(response.job_id);
+        setJobId(response.job_id);
         nav("/report", { replace: true });
       } else {
         let err = xhr.statusText;

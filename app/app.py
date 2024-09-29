@@ -50,18 +50,15 @@ def serve_react(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
-#TODO: dev, REMOVE ME !!!
-@app.route("/process_test/<job_id>", methods=["PUT"])
-async def process_test(job_id):
-    def update_callback(message):
-        logging.info(f"Job update: {message}")
-
-    if not str.isalnum(job_id):
-        return jsonify({"error": "Invalid job ID"}), 400
-
-    # Run job
-    await manager.run_job(job, job_id, update_callback)
-    return jsonify({"message": "Processing complete"})
+@app.route("/get_job/<job_id>", methods=["GET"])
+def get_job(job_id):
+    path_to_result = os.path.join(app.root_path, "temp", "temp", job_id, "public", "output_merged.txt")
+    
+    if os.path.exists(path_to_result):
+        with open(path_to_result, "r") as file:
+            return jsonify(file.read())
+    else:
+        return jsonify({"message": "No result available"}), 102
 
 
 @app.route("/video", methods=["POST"])
