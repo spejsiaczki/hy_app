@@ -28,6 +28,10 @@
     margin-top: 40px;
     flex-grow: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
 }
 
 .slogan {
@@ -35,9 +39,20 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 1.3em;
+    margin-bottom: 1.1em;
     text-align: center;
     margin-left: 20px;
     margin-right: 20px;
     max-width: 1000px;
+}
+
+.plot-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.plot {
+    padding: 10px;
 }
