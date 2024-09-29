@@ -11,6 +11,7 @@ Developed during the HackYeah 2024 hackathon.
 Repo setup:
 ```sh
 git clone https://github.com/spejsiaczki/hy_app.git
+cd hy_app
 git submodule update --init --recursive
 ```
 
@@ -19,6 +20,14 @@ Python dependencies:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r app/modules/requirements.txt
+```
+
+Build the app:
+```sh
+cd web
+npm install
+npm run build
+cd ..
 ```
 
 Start the app:
