@@ -6,7 +6,7 @@ class ProgressBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      progress: 70,
+      progress: props.progress || 0,
       status: "Ładowanie..."
     };
   }
