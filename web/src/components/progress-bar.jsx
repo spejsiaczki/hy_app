@@ -1,4 +1,4 @@
-import styles from './progress-bar.module.css';
+import styles from "./progress-bar.module.css";
 
 import React from "react";
 
@@ -7,7 +7,7 @@ class ProgressBar extends React.Component {
     super(props);
     this.state = {
       progress: props.progress || 0,
-      status: "Ładowanie..."
+      status: "Ładowanie...",
     };
   }
 
@@ -23,7 +23,11 @@ class ProgressBar extends React.Component {
     return (
       <div className={styles["progress-bar"]}>
         <div className={styles["progress-backdrop"]} />
-        <div id="progress-mask" className={styles["progress"]} style={{ width: this.state.progress + "%" }} />
+        <div
+          id="progress-mask"
+          className={styles["progress"]}
+          style={{ width: this.state.progress + "%" }}
+        />
         <div className={styles["status"]}>{this.state.status}</div>
       </div>
     );

@@ -1,72 +1,72 @@
 .upload {
-    height: calc(100vh - 80px);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  height: calc(100vh - 80px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .slogan {
-    font-size: 3em;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 1.3em;
-    text-align: center;
-    margin-left: 20px;
-    margin-right: 20px;
-    max-width: 1000px;
+  font-size: 3em;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 1.3em;
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: 1000px;
 }
 
 /* below 700px width  hide the slogan */
 @media (max-width: 550px) {
-    .slogan {
-        display: none;
-    }
+  .slogan {
+    display: none;
+  }
 }
 
 .dropzone {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    background-color: #222;
-    color: #ccc;
-    cursor: grab;
-    width: 600px;
-    height: 400px;
-    max-width: 90%;
-    max-height: 90%;
-    transition: opacity 0.1s;
-    opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #222;
+  color: #ccc;
+  cursor: grab;
+  width: 600px;
+  height: 400px;
+  max-width: 90%;
+  max-height: 90%;
+  transition: opacity 0.1s;
+  opacity: 1;
 }
 
 .dropzone.drag-over {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 .drop-tip {
-    color: #aaa;
-    transition: transform 0.3s;
-    font-size: 1.3em;
-    margin-bottom: 40px;
-    pointer-events: none;
+  color: #aaa;
+  transition: transform 0.3s;
+  font-size: 1.3em;
+  margin-bottom: 40px;
+  pointer-events: none;
 }
 
 .upload-icon {
-    height: 100px;
-    color: #666;
-    pointer-events: none;
+  height: 100px;
+  color: #666;
+  pointer-events: none;
 }
 
 .upload-button {
-    margin-top: 50px;
-    transition: transform 0.3s;
-    filter: brightness(2);
+  margin-top: 50px;
+  transition: transform 0.3s;
+  filter: brightness(2);
 }
 
 .upload-button-disabled {
-    pointer-events: none;
+  pointer-events: none;
 }

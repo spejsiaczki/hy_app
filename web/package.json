@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "watch": "chokidar 'src/**/*' -c 'npm run build'",
-    "format": "prettier --write src/**/*"
+    "format": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [

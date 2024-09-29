@@ -1,7 +1,7 @@
 import styles from "./report.module.css";
 import { useEffect } from "react";
-import React from 'react';
-import Plot from 'react-plotly.js';
+import React from "react";
+import Plot from "react-plotly.js";
 
 let reportVideo = null;
 
@@ -15,7 +15,15 @@ function StyledPlot({ className, title, data }) {
     <Plot
       className={className}
       data={data}
-      layout={{ width: 320, height: 240, title: title, margin: { t: 40, r: 20, b: 20, l: 20 }, plot_bgcolor: '#0000', paper_bgcolor: '#0000', font: { color: '#eee' } }}
+      layout={{
+        width: 320,
+        height: 240,
+        title: title,
+        margin: { t: 40, r: 20, b: 20, l: 20 },
+        plot_bgcolor: "#0000",
+        paper_bgcolor: "#0000",
+        font: { color: "#eee" },
+      }}
       config={{
         // displayModeBar: false,
         // responsive: true,
@@ -69,15 +77,11 @@ export default function Report() {
         <div className={styles["result-cards"]}>
           <div className={styles["result"]}>
             <div className={styles["result-label"]}>100</div>
-            <div className={styles["result-value"]}>
-              Liczba słów
-            </div>
+            <div className={styles["result-value"]}>Liczba słów</div>
           </div>
           <div className={styles["result"]}>
             <div className={styles["result-label"]}>100</div>
-            <div className={styles["result-value"]}>
-              Liczba słów
-            </div>
+            <div className={styles["result-value"]}>Liczba słów</div>
           </div>
         </div>
         <div className={styles["result-title"]}>Wykryte błędy</div>
@@ -86,9 +90,7 @@ export default function Report() {
             <div className={styles["result-label"]}>Dźwiękowe</div>
             <div
               className={
-                styles["result-value"] +
-                  " " +
-                  (audio_errors == 0)
+                styles["result-value"] + " " + (audio_errors == 0)
                   ? styles["great"]
                   : audio_errors < 3
                     ? styles["ok"]
@@ -100,18 +102,14 @@ export default function Report() {
           </div>
           <div className={styles["result"]}>
             <div className={styles["result-label"]}>Treść</div>
-            <div className={styles["result-value"]}>
-              Liczba słów
-            </div>
+            <div className={styles["result-value"]}>Liczba słów</div>
           </div>
           <div className={styles["result"]}>
             <div className={styles["result-label"]}>Wizualne</div>
-            <div className={styles["result-value"]}>
-              Liczba słów
-            </div>
+            <div className={styles["result-value"]}>Liczba słów</div>
           </div>
         </div>
-        <div className={styles['plot-container']}>
+        <div className={styles["plot-container"]}>
           <StyledPlot
             className={styles["plot"]}
             title="Jakość Przekazu"
@@ -119,9 +117,9 @@ export default function Report() {
               {
                 x: [1, 2, 3, 7],
                 y: [2, 6, 3, 1],
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: { color: '#e6a' },
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "#e6a" },
               },
             ]}
           />
@@ -132,9 +130,9 @@ export default function Report() {
               {
                 x: [1, 2, 3],
                 y: [2, 6, 3],
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: { color: '#8e6' },
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "#8e6" },
               },
             ]}
           />
@@ -145,15 +143,14 @@ export default function Report() {
               {
                 x: [1, 2, 3, 4],
                 y: [2, 1, 3, 3],
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: { color: '#e86' },
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "#e86" },
               },
             ]}
           />
         </div>
       </div>
-
     </div>
   );
 }

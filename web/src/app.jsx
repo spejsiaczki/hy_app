@@ -1,16 +1,13 @@
-import styles from './app.module.css';
+import styles from "./app.module.css";
 
 // import { useEffect, useState } from "react";
 import Navbar from "./components/navbar";
-import NotFound from './pages/not-found';
-import Upload from './pages/upload';
-import Report from './pages/report';
+import NotFound from "./pages/not-found";
+import Upload from "./pages/upload";
+import Report from "./pages/report";
 // import FileUploadComponent from "./components/FileUploadComponent";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 export default function App() {
   // const [message, setMessage] = useState("");
@@ -21,7 +18,7 @@ export default function App() {
   // }, []);
 
   return (
-    <div className={styles['app']}>
+    <div className={styles["app"]}>
       <BrowserRouter>
         <Navbar />
         <Routes>

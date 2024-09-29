@@ -1,33 +1,33 @@
 .not-found {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-self: center;
-    height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  height: calc(100vh - 80px);
 }
 
 .centering {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .code-backdrop {
-    position: absolute;
-    font-size: 30vw;
-    font-weight: 900;
-    color: #eeeeee08;
-    user-select: none;
+  position: absolute;
+  font-size: 30vw;
+  font-weight: 900;
+  color: #eeeeee08;
+  user-select: none;
 }
 
 .header {
-    font-size: 4em;
-    font-weight: 700;
-    margin-bottom: 20px;
+  font-size: 4em;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 .subtitle {
-    color: #ccc;
-    font-style: italic;
+  color: #ccc;
+  font-style: italic;
 }
