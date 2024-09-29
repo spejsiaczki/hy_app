@@ -1,0 +1,4 @@
+flask[async]==3.0.3
+Flask-SocketIO==5.3.7
+psutil==6.0.0
+flasgger==0.9.7.1

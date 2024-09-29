@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request, send_from_directory, flash
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, disconnect
 import time
+import asyncio
 
 app = Flask(__name__, static_folder="../web/build")
 swagger = Swagger(app)
@@ -43,6 +44,11 @@ def serve_react(path):
     else:
         return send_from_directory(app.static_folder, "index.html")
 
+
+@app.route("/process_test", methods=["PUT"])
+async def process_test():
+    await asyncio.sleep(5)
+    return jsonify({"message": "Processing complete"})
 
 @app.route("/video", methods=["POST"])
 def upload_file():

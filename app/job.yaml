@@ -1,0 +1,47 @@
+name: BreakWordTraps
+version: 1
+input_artifact:
+  name: video_original.mp4
+  type: video
+steps:
+  - name: trim_splash_screen
+    entries:
+      - module: video_trim
+        inputs:
+          - name: video_original.mp4
+            param_name: input
+            type: video
+        outputs:
+          - name: video_trim.mp4
+            param_name: output_mp4
+            type: video
+            public: true
+          - name: audio_trim.wav
+            param_name: output_wav
+            type: audio
+            public: true
+      # - module: title_screen_remover
+      #   inputs:
+      #     - name: video.mp4
+      #       param_name: input
+      #       type: video
+      #       public: true
+      #   outputs:
+      #     - name: video_cut.mp4
+      #       param_name: output
+      #       type: video
+  # - name: generate_results
+  #   entries:
+  #     - module: merge_json_outputs
+  #       inputs:
+  #         - name: a.yaml
+  #           param_name: a
+  #           type: yaml
+  #         - name: b.yaml
+  #           param_name: b
+  #           type: yaml
+  #       outputs:
+  #         - name: results.json
+  #           param_name: results
+  #           type: yaml
+  #           public: true
