@@ -162,3 +162,15 @@ steps:
             param_name: output_merged
             type: text
             public: true
+  - name: text_summary
+    entries:
+      - module: text_summary
+        inputs:
+          - name: output_text.txt
+            param_name: original_text
+            type: text
+        outputs:
+          - name: output_summary_text.txt
+            param_name: summary_text
+            type: text
+            public: true
