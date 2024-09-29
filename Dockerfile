@@ -8,9 +8,7 @@ RUN apt-get update && \
 
 COPY . .
 
-RUN pip install -r requirements.txt && \
-    pip install -r app/requirements.txt && \
-    pip install -r app/modules/requirements.txt
+RUN pip install -r app/modules/requirements.txt
 
 WORKDIR /app/app
 
