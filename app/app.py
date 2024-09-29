@@ -12,6 +12,7 @@ from job_manager.manager import JobManager
 
 app = Flask(__name__, static_folder="../web/build")
 swagger = Swagger(app)
+progress = 0.0
 
 # Job manager instances
 artifacts = ArtifactManager(os.path.join(app.root_path, "temp"))
@@ -60,7 +61,7 @@ def get_job(job_id):
         with open(path_to_result, "r") as file:
             return jsonify(file.read())
     else:
-        return jsonify({"message": "No result available"}), 102
+        return jsonify({"progress": progress}), 206
 
 
 @app.route("/video", methods=["POST"])
@@ -123,9 +124,11 @@ async def run_job(job_id):
 
     # if not artifacts.does_job_exist(job_id):
     #     return jsonify("error", {"message": "Job not found"})
-
+    global progress
     def update_callback(message):
         print(f"Job update: {message}")
+        global progress
+        progress = message.current_step / message.total_steps
         # emit("update", {"message": "dupa23"})
 
     await manager.run_job(job, job_id, update_callback)
