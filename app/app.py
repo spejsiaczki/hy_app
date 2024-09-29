@@ -1,14 +1,23 @@
 import os
 import psutil
+import uuid
+import logging
+
 from flasgger import Swagger
 from flask import Flask, jsonify, request, send_from_directory, flash
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, disconnect
-import time
-import asyncio
+
+from job_manager.artifact_manager import ArtifactManager
+from job_manager.manager import JobManager
 
 app = Flask(__name__, static_folder="../web/build")
 swagger = Swagger(app)
+
+# Job manager instances
+artifacts = ArtifactManager(os.path.join(app.root_path, "temp"))
+manager = JobManager(os.path.join(app.root_path, "modules"), artifacts)
+job = manager.load_job(os.path.join(app.root_path, "job.yaml"))
 
 # Secret key for JWT and app
 app.secret_key = os.getenv("SECRET_KEY", "super_secret_key")
@@ -45,10 +54,19 @@ def serve_react(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/process_test", methods=["PUT"])
-async def process_test():
-    await asyncio.sleep(5)
+#TODO: dev, REMOVE ME !!!
+@app.route("/process_test/<job_id>", methods=["PUT"])
+async def process_test(job_id):
+    def update_callback(message):
+        logging.info(f"Job update: {message}")
+
+    if not str.isalnum(job_id):
+        return jsonify({"error": "Invalid job ID"}), 400
+
+    # Run job
+    await manager.run_job(job, job_id, update_callback)
     return jsonify({"message": "Processing complete"})
+
 
 @app.route("/video", methods=["POST"])
 def upload_file():
@@ -88,9 +106,16 @@ def upload_file():
         return jsonify({"error": "No selected file"}), 400
 
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
-        return jsonify({"message": "File uploaded successfully"}), 200
+        # Generate job ID
+        job_id = uuid.uuid4().hex
+
+        # Copy uploaded file to job artifact folder
+        input_artifact_path = artifacts.get_artifact_path(job.input_artifact, job_id)
+        file.save(os.path.join(input_artifact_path))
+
+        artifacts.set_job_input_artifact(job_id, job.input_artifact)
+
+        return jsonify({"message": "File uploaded successfully", "job_id": job_id}), 200
     else:
         return jsonify({"error": "Invalid file format"}), 400
 
@@ -170,21 +195,18 @@ def telemetry():
     return jsonify(telemetry_data)
 
 
-@socketio.on("start_updates")
-def handle_updates():
-    """
-    After file upload, this WebSocket connection is established.
-    Sends 3 update messages, one every second, and then disconnects.
-    """
-    # Send 3 updates, 1 per second
-    for i in range(1, 4):
-        update_message = f"Processing update {i}/3"
-        emit("update", {"message": update_message})
-        time.sleep(1)  # Simulate delay in sending updates
+@socketio.on("start_job")
+async def handle_updates(job_id):
+    if not str.isalnum(job_id):
+        return emit("error", {"message": "Invalid job ID"})
+    
+    if not artifacts.does_job_exist(job_id):
+        return emit("error", {"message": "Job not found"})
 
-    # Disconnect the WebSocket after sending the updates
-    emit("complete", {"message": "All updates sent, closing connection."})
-    disconnect()
+    def update_callback(message):
+        emit("update", {"message": message})
+
+    await manager.run_job(job, job_id, update_callback)
 
 
 if __name__ == "__main__":
