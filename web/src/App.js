@@ -2,6 +2,7 @@ import Navbar from "./components/Navbar";
 import UploadBox from "./components/UploadBox";
 import { ContentWrapper, Header, Description } from "./styles";
 import { useEffect, useState } from "react";
+import FileUploadComponent from "./components/FileUploadComponent";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -20,6 +21,7 @@ function App() {
         <Description>
           Upload your files easily and securely with our cutting-edge service.
         </Description>
+        <FileUploadComponent />
         <UploadBox />
       </ContentWrapper>
     </div>
