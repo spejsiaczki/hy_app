@@ -1,55 +1,22 @@
-import React, { useRef, useState } from 'react';
-import styles from './upload.module.css';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '../components/button';
-import ProgressBar from '../components/progress-bar';
-import { setReportVideo } from './report';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from "react";
+import styles from "./upload.module.css";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "../components/button";
+import ProgressBar from "../components/progress-bar";
+import { setReportVideo } from "./report";
+import { useNavigate } from "react-router-dom";
 
 export default function Upload() {
-  const nav = useNavigate();
-  const fileInputRef = useRef(null);
-  const dropzoneRef = useRef(null);
-  const [buttonActive, setButtonActive] = useState(true);
-  const [isUploading, setIsUploading] = useState(false); // Track if upload is in progress
-  const progressBarRef = useRef(null);
+    const nav = useNavigate();
+    const fileInputRef = useRef(null);
+    const dropzoneRef = useRef(null);
+    const [buttonActive, setButtonActive] = useState(true);
+    const [isUploading, setIsUploading] = useState(false); // Track if upload is in progress
+    const progressBarRef = useRef(null);
 
     // const [job_id, setJobId] = useState(null);
 
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const files = event.dataTransfer.files;
-    handleFileUpload(files[0]); // Handle the dropped file
-  };
-
-  const handleFileSelect = (event) => {
-    const files = event.target.files;
-    handleFileUpload(files[0]); // Handle the selected file
-  };
-
-  const handleClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileUpload = (file) => {
-    if (!file) return;
-    setReportVideo(file);
-
-    const formData = new FormData();
-    formData.append('file', file); // Append the file to FormData
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', '/video', true);
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        // setProgress(percentComplete);
-        progressBarRef.current?.setProgress(percentComplete);
-        console.log(`Upload progress: ${percentComplete}%`);
-      }
     const handleDragOver = (event) => {
         event.preventDefault();
     };
@@ -78,19 +45,6 @@ export default function Upload() {
         xhr.send(JSON.stringify({ job_id: job_id }));
     };
 
-    xhr.onloadend = () => {
-      setIsUploading(false); // Mark the upload as finished
-      if (xhr.status === 200) {
-        console.log('File uploaded successfully');
-        nav('/report', { replace: true });
-      } else {
-        let err = xhr.statusText;
-        if (xhr.status == 400) {
-          const text = xhr.responseText;
-          err = JSON.parse(text).error;
-        }
-        alert('Nie udało się wysłać pliku: ' + err);
-      }
     const handleDrop = (event) => {
         event.preventDefault();
         const files = event.dataTransfer.files;
@@ -108,6 +62,7 @@ export default function Upload() {
 
     const handleFileUpload = (file) => {
         if (!file) return;
+        setReportVideo(file);
 
         const formData = new FormData();
         formData.append("file", file); // Append the file to FormData
@@ -127,19 +82,13 @@ export default function Upload() {
             }
         };
 
-        xhr.onloadstart = () => {
-            setIsUploading(true); // Mark the upload as started
-        };
-
         xhr.onloadend = () => {
             setIsUploading(false); // Mark the upload as finished
             if (xhr.status === 200) {
                 console.log("File uploaded successfully");
-                let response = JSON.parse(xhr.responseText);
-                console.log(response);
-                console.log(response.job_id);
-                // setJobId();
+                const response = JSON.parse(xhr.responseText);
                 sentJobRequest(response.job_id);
+                nav("/report", { replace: true });
             } else {
                 let err = xhr.statusText;
                 if (xhr.status == 400) {
@@ -151,11 +100,10 @@ export default function Upload() {
         };
 
         xhr.onerror = () => {
-            setIsUploading(false);
-            console.error("An error occurred during the upload");
+            console.error("An error occurred during the file upload");
         };
 
-        xhr.send(formData); // Send the file to the server
+        xhr.send(formData); // Initiate the upload
     };
 
     return (

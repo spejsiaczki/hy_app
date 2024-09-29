@@ -1,3 +1,6 @@
 [submodule "app/job_manager"]
 	path = app/job_manager
 	url = git@github.com:spejsiaczki/job_manager.git
+[submodule "app/modules"]
+	path = app/modules
+	url = git@github.com:spejsiaczki/modules.git
